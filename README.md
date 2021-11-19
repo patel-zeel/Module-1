@@ -22,3 +22,5 @@ This assignment requires the following files from the previous assignments.
 ![image](https://user-images.githubusercontent.com/59758528/142570406-2e675f04-e7cb-4bbd-b700-406bcf4c451a.png)
 ![image](https://user-images.githubusercontent.com/59758528/142570444-3b214ef3-cb95-47bd-b34c-fc8bae8d3a1a.png)
 
+# Training on data "Split"
+![screencapture-10-0-62-229-8501-2021-11-19-11_12_47](https://user-images.githubusercontent.com/59758528/142571529-899a7ced-7945-4635-b93c-22b145fe6b5d.png)
