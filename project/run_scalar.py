@@ -4,13 +4,17 @@ Be sure you have minitorch installed in you Virtual Env.
 """
 import minitorch
 import random
+import numpy as np
 
 
 class Network(minitorch.Module):
     def __init__(self, hidden_layers):
         super().__init__()
         # TODO: Implement for Task 1.5.
-        raise NotImplementedError('Need to implement for Task 1.5')
+        # raise NotImplementedError('Need to implement for Task 1.5')
+        self.layer1 = Linear(2, hidden_layers)
+        self.layer2 = Linear(hidden_layers, hidden_layers)
+        self.layer3 = Linear(hidden_layers, 1)
 
     def forward(self, x):
         middle = [h.relu() for h in self.layer1.forward(x)]
@@ -40,7 +44,13 @@ class Linear(minitorch.Module):
 
     def forward(self, inputs):
         # TODO: Implement for Task 1.5.
-        raise NotImplementedError('Need to implement for Task 1.5')
+        # raise NotImplementedError("Need to implement for Task 1.5")
+        outputs = []
+        for out_i in range(len(self.bias)):
+            outputs.append(self.bias[out_i].value)
+            for in_i in range(len(inputs)):
+                outputs[out_i] += self.weights[in_i][out_i].value * inputs[in_i]
+        return outputs
 
 
 def default_log_fn(epoch, total_loss, correct, losses):
@@ -63,6 +73,13 @@ class ScalarTrain:
         self.model = Network(self.hidden_layers)
         optim = minitorch.SGD(self.model.parameters(), learning_rate)
 
+        ### Penalty
+        # Importance sampling for SGD
+        zeros = sum(i == 0 for i in data.y)
+        ones = sum(i == 1 for i in data.y)
+        proba = [zeros if yi == 1 else ones for yi in data.y]
+        proba = [p / sum(proba) for p in proba]
+
         losses = []
         for epoch in range(1, self.max_epochs + 1):
             total_loss = 0.0
@@ -72,6 +89,7 @@ class ScalarTrain:
             # Forward
             loss = 0
             for i in range(data.N):
+                i = np.random.choice(data.N, p=proba)
                 x_1, x_2 = data.X[i]
                 y = data.y[i]
                 x_1 = minitorch.Scalar(x_1)
@@ -102,5 +120,5 @@ if __name__ == "__main__":
     PTS = 50
     HIDDEN = 2
     RATE = 0.5
-    data = minitorch.datasets["Simple"](PTS)
+    data = minitorch.datasets["Xor"](PTS)
     ScalarTrain(HIDDEN).train(data, RATE)
